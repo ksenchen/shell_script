@@ -23,7 +23,6 @@ if [ "$1" = "-p" ]; then
     shift 2
 fi
 
-REDIS_DIR="/usr/local/redis-3.2.3"
 REDIS="/usr/local/bin/redis-server"
 PROG=$(basename $REDIS)
 

@@ -1,0 +1,79 @@
+#!/bin/bash
+#chkconfig: 2345 55 25
+#description: Starts,stops and restart the tomcat-server
+#Ver:1.1  
+#Write by ND chengh(200808)
+#usage: ./script_name {start|stop|status|restart|log}
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check networking is up.
+[ "$NETWORKING" == "no" ] && exit 0
+
+export  JAVA_HOME="/usr/bin/jdk1.7.0_67"
+
+RETVAL=0
+TOMCAT="/usr/local/tomcat-dc"
+PROG=$(basename $TOMCAT)
+
+start(){
+	echo -n $"Starting $PROG: "
+	"${TOMCAT}/bin/startup.sh"
+	if [ $RETVAL -eq 0 ]; then
+		success;echo
+	else
+		failure;echo
+	fi
+	return $RETVAL
+}
+
+stop(){
+	echo -n $"Stopping $PROG: "
+	"${TOMCAT}/bin/shutdown.sh"
+	if [ $RETVAL -eq 0 ]; then
+		success;echo
+	else
+		failure;echo
+	fi
+}
+
+restart(){
+	echo -n $"Restarting $PROG: "
+	"${TOMCAT}/bin/restart.sh"
+	if [ $RETVAL -eq 0 ]; then
+		success;echo
+	else
+		failure;echo
+	fi
+	return $RETVAL
+}
+
+log(){
+	echo -n $"Logging $PROG: "
+	tail -f "$TOMCAT/logs/catalina.out"
+	return $RETVAL
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	log)
+		log
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|log}"
+		;;
+esac
+
+exit $RETVAL
